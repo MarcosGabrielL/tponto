@@ -31,6 +31,8 @@ public class testinsight {
             
             Connector.getConnection();
              Connector.creatdatabase();
+             
+           
                 
          new Painel().setVisible(true);
         

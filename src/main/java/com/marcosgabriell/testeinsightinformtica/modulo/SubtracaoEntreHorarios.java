@@ -200,11 +200,11 @@ public class SubtracaoEntreHorarios {
              
              for(Interval trabalhou : Trabalhos){
                  
-                  /* System.out.println("InicioIntervalo: "+ formatador1.format(searchInterval.getStart().getMillis())
+                   System.out.println("InicioIntervalo: "+ formatador1.format(searchInterval.getStart().getMillis())
                                   +"\tFinalIntervalo"+formatador1.format(searchInterval.getEnd().getMillis()));
                    System.out.println("EntradaNoTrabalho: "+ formatador1.format(trabalhou.getStart().getMillis())
                                    +"\tSaidaNoTrabalho"+formatador1.format(trabalhou.getEnd().getMillis())+"\n\n");
-                   */
+                   
                                 
                  
                  //Entrou depois do inicio do intervalo e saiu antes do fim do intervalo
@@ -228,6 +228,10 @@ public class SubtracaoEntreHorarios {
                     }
                   //Entrou depois do inicio do intervalo e saiu depois do fim do intervalo
                   if (trabalhou.getStart().isAfter(searchInterval.getStart()) && trabalhou.getEnd().isAfter(searchInterval.getEnd())) {
+                     
+                      if(!(searchInterval.getEnd().toInstant().toDate().getTime() - trabalhou.getStart().toInstant().toDate().getTime() ==0)
+                      && !(searchInterval.getStart().toInstant().toDate().getTime() - trabalhou.getEnd().toInstant().toDate().getTime() ==0)){
+                       
                       try{
                       Interval intervalo = new Interval(trabalhou.getStart(), searchInterval.getEnd());
                        System.out.println("EXTRA 2: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
@@ -243,9 +247,18 @@ public class SubtracaoEntreHorarios {
                                                             ));
                         extras.add(extra);
                       }catch( java.lang.IllegalArgumentException e){}
+                      
+                     }else{
+                          
+                      }
                     }
                   //Entrou antes do inicio do intervalo e saiu antes do fim do intervalo
-                  if (trabalhou.getStart().isBefore(searchInterval.getStart()) && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
+                  if ( trabalhou.getStart().isBefore(searchInterval.getStart()) && trabalhou.getEnd().isBefore(searchInterval.getEnd()) ) {
+                      //Verifica se final trabalho diferente inicio intervalo
+                      
+                      if(!(searchInterval.getStart().toInstant().toDate().getTime() - trabalhou.getEnd().toInstant().toDate().getTime() ==0)){
+                          
+                      
                       try{
                       Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getEnd());
                        System.out.println("EXTRA 3: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
@@ -260,7 +273,54 @@ public class SubtracaoEntreHorarios {
                                                             ));
                         extras.add(extra);
                       }catch( java.lang.IllegalArgumentException e){}
+                      
+                      }
                     }
+                  
+                  //Entrou depois e terminou justo
+                  if ( trabalhou.getStart().isAfter(searchInterval.getStart()) &&
+                         searchInterval.getEnd().toInstant().toDate().getTime() - trabalhou.getEnd().toInstant().toDate().getTime() ==0 ){
+                      //Verifica se final trabalho diferente inicio intervalo
+                      
+                      
+                      try{
+                      Interval intervalo = new Interval(trabalhou.getStart(), trabalhou.getEnd());
+                       System.out.println("EXTRA 5: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       HoraExtra extra = new HoraExtra();
+                        extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        extra.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        extra.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        extras.add(extra);
+                      }catch( java.lang.IllegalArgumentException e){}
+                      
+                      
+                    }
+                  
+                  //Entrou justo no intervalo e saiu antes
+                    if ( searchInterval.getStart().toInstant().toDate().getTime() - trabalhou.getStart().toInstant().toDate().getTime() ==0 &&
+                        trabalhou.getEnd().isBefore(searchInterval.getEnd()) ){
+                       try{
+                      Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getEnd());
+                       System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       HoraExtra extra = new HoraExtra();
+                        extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        extra.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        extra.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        extras.add(extra);
+                      }catch( java.lang.IllegalArgumentException e){}
+                    }
+                  
+                      
                    //Entrou antes do inicio do intervalo e saiu depois do intervalo
                    if (trabalhou.getStart().isBefore(searchInterval.getStart()) && trabalhou.getEnd().isAfter(searchInterval.getEnd())) {
                       try{
@@ -288,16 +348,37 @@ public class SubtracaoEntreHorarios {
             
              for(Interval trabalhou : Trabalhos){
                  
-               /*  System.out.println("InicioTurno: "+ formatador2.format(searchInterval.getStart().getMillis())
+                 System.out.println("InicioTurno: "+ formatador2.format(searchInterval.getStart().getMillis())
                                   +"\tFinalTurno"+formatador2.format(searchInterval.getEnd().getMillis()));
                    System.out.println("EntradaNoTrabalho: "+ formatador2.format(trabalhou.getStart().getMillis())
                                    +"\tSaidaNoTrabalho"+formatador2.format(trabalhou.getEnd().getMillis())+"\n\n");
-                   */
+                   
                    
                              
                    
                    //1- Entrou depois do inicio do turno 2- e saiu antes do fim do turno
-                  if (trabalhou.getStart().isAfter(searchInterval.getStart()) && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
+                  if (trabalhou.getStart().isAfter(searchInterval.getStart())  &&
+                      (trabalhou.getEnd().isBefore(searchInterval.getEnd()) ||
+                          trabalhou.getEnd().toInstant().toDate().getTime() - searchInterval.getEnd().toInstant().toDate().getTime() ==0 ) ) {
+                      //Entrou depois e saiu na hora
+                      if( trabalhou.getEnd().toInstant().toDate().getTime() - searchInterval.getEnd().toInstant().toDate().getTime() ==0  ){
+                          try{
+                          //1
+                      Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getStart());
+                       System.out.println("ATRASO 1 : "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       Atraso atraso = new Atraso();
+                        atraso.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        atraso.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        atraso.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        atrasos.add(atraso);
+                        }catch( java.lang.IllegalArgumentException e){}
+                      }else{
+                      
                       try{
                           //1
                       Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getStart());
@@ -327,12 +408,14 @@ public class SubtracaoEntreHorarios {
                                                             ));
                         atrasos.add(atraso1);
                       }catch( java.lang.IllegalArgumentException e){}
+                      
+                      }
                     }else{
                        //Entrou depois do inicio do turno e saiu depois
-                  if (trabalhou.getStart().isAfter(searchInterval.getStart()) && trabalhou.getEnd().isAfter(searchInterval.getEnd())) {
+                  if ((trabalhou.getStart().isAfter(searchInterval.getStart()) && trabalhou.getStart().isBefore(searchInterval.getEnd())) && trabalhou.getEnd().isAfter(searchInterval.getEnd())) {
                      
                       if(!TurnoMadrugada){
-                            boolean tem = false;
+                           /* boolean tem = false;
                              if(Turnos.size() > 1){
                                  //verifica se tem outro turno anterior
 
@@ -343,7 +426,7 @@ public class SubtracaoEntreHorarios {
                                         
                                     }
                              }
-                             if(tem){
+                             if(tem){*/
                                     try{
                                     Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getStart());
                                      System.out.println("ATRASO 3: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
@@ -358,7 +441,7 @@ public class SubtracaoEntreHorarios {
                                                             ));
                         atrasos.add(atraso);
                                     }catch( java.lang.IllegalArgumentException e){}
-                             }
+                         //    }
                    
                   }else{
                         try{
@@ -379,8 +462,11 @@ public class SubtracaoEntreHorarios {
                        }
                   }
                 
-                 //Começou o trabalho antes do turno e Saiu antes de terminar o turno
-                  if (trabalhou.getStart().isBefore(searchInterval.getStart()) && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
+                 //Começou o trabalho antes do turno ou justo e Saiu antes de terminar o turno
+                  if ((trabalhou.getStart().isBefore(searchInterval.getStart()) || 
+                           trabalhou.getStart().toInstant().toDate().getTime() - searchInterval.getStart().toInstant().toDate().getTime() ==0 )
+                     
+                          &&  trabalhou.getEnd().isBefore(searchInterval.getEnd() )) {
                       boolean tem = false;
                      if(Turnos.size() > 1){
                          //verifica se tem outro turno anterior
@@ -407,6 +493,29 @@ public class SubtracaoEntreHorarios {
                         atrasos.add(atraso);
                       }catch( java.lang.IllegalArgumentException e){}
                       
+                     }else{
+                         //Vê se termina dentro do turno
+                                   if(trabalhou.getEnd().isBefore(searchInterval.getEnd())
+                                           && trabalhou.getEnd().isAfter(searchInterval.getStart()) ){
+                                    
+                                
+                      try{
+                      Interval intervalo = new Interval(trabalhou.getEnd(), searchInterval.getEnd());
+                       System.out.println("ATRASO 5: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       Atraso atraso = new Atraso();
+                        atraso.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        atraso.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        atraso.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        atrasos.add(atraso);
+                      }catch( java.lang.IllegalArgumentException e){}
+                      
+                     }
+                         
                      }
                     }
                    
@@ -416,10 +525,108 @@ public class SubtracaoEntreHorarios {
              }
             
                  
-             }
+             } 
         
+        //Não entou ou passou pelo turno
+                    //Não Trabalhou no turno
+       for(Interval searchInterval: Turnos){
+             boolean contains = false;
+              
+             for(Interval trabalhou : Trabalhos){
+                
+                      
+                    if( (searchInterval.contains(trabalhou.getEndMillis()) 
+                            || searchInterval.getEndMillis() - trabalhou.getEndMillis() == 0)
+                            ||  searchInterval.contains(trabalhou.getStartMillis())){
+                            
+                        contains = true;
+                      //Entrou antes e saiu antes
+                      //Entrou antes e saiu depois
+                      //Entrou depois e saiu depois
+                      //Entrou depois e saiu antes
+                    }
+                
+                 
+             }
+             
+             if(!contains){
+                 System.out.println("Não Trabalhou no intervalo: "+searchInterval);
+                 try{
+                      Interval intervalo = searchInterval;
+                       System.out.println("ATRASO 6: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       Atraso atraso = new Atraso();
+                        atraso.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        atraso.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        atraso.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        atrasos.add(atraso);
+                      }catch( java.lang.IllegalArgumentException e){}
+             }
+             
+       }
        
        ResultSubtracao result = new ResultSubtracao();
+       List<Interval> ar = new ArrayList<>();
+       List<Atraso> newatrasos = new ArrayList<>();
+         List<HoraExtra> newextras = new ArrayList<>();
+       for(Atraso a :atrasos){
+            try{
+           Interval interval = new Interval(formatador1.parse(a.getEntrada()).getTime(), formatador1.parse(a.getSaida()).getTime());
+            
+           ar.add(interval);
+            }catch( java.lang.IllegalArgumentException e){}
+            
+           
+       }
+        Collections.sort(ar, new IntervalStartComparator());
+       if(ar.size()>1){
+       Interval interval = new Interval(ar.get(0).getStart(), ar.get(ar.size()-1).getEnd());
+       //Interval interval = new Interval(formatador1.parse("08:01").getTime(), formatador1.parse("11:59").getTime());
+            
+            System.out.println("Interval: "+interval );
+            System.out.println("Todos atrasos: "+ar );
+            
+       List<Interval> arinterno = new ArrayList<>();
+       for(Interval atraso : ar){
+           
+            for(Interval atraso1 : ar){
+                    
+                        if(atraso1.getStart().isBefore(atraso.getStart()) && atraso1.getEnd().isBefore(atraso.getEnd())){
+                              try{
+                            Interval a = new Interval(atraso.getStart(), atraso1.getEnd());
+                            arinterno.add(a);
+                             }catch( java.lang.IllegalArgumentException e){}
+                        }
+           
+                 }
+           
+       }
+       //arinterno = findGaps(ar,interval);
+       System.out.println("Atrasos: "+arinterno );
+       
+         for(Interval atraso: arinterno){
+             Atraso NewAtraso = new Atraso();
+             NewAtraso.setEntrada(formatador1.format(atraso.getStart().getMillis()));
+             NewAtraso.setSaida(formatador1.format(atraso.getEnd().getMillis()));
+             NewAtraso.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( atraso.getStart().toInstant().toDate().getTime() 
+                                                                                    - atraso.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+             newatrasos.add(NewAtraso);
+         }
+         if(newatrasos.size()>=1){
+             atrasos = newatrasos;
+         }
+       }else{
+           
+       }
+       
+       
        result.setAtrasos(atrasos);
        result.setExtras(extras);
         
@@ -443,22 +650,20 @@ public class SubtracaoEntreHorarios {
             return gaps;
         }
 
-        // create a sub-list that excludes interval which does not overlap with
-        // searchInterval
+        
         List<Interval> subExistingList = removeNoneOverlappingIntervals(existingIntervals, searchInterval);
         DateTime subEarliestStart = subExistingList.get(0).getStart();
         DateTime subLatestStop = subExistingList.get(subExistingList.size() - 1).getEnd();
 
-        // in case the searchInterval is wider than the union of the existing
-        // include searchInterval.start => earliestExisting.start
+        
         if (searchStart.isBefore(subEarliestStart)) {
             gaps.add(new Interval(searchStart, subEarliestStart));
         }
 
-        // get all the gaps in the existing list
+        
         gaps.addAll(getExistingIntervalGaps(subExistingList));
 
-        // include latestExisting.stop => searchInterval.stop
+       
         if (searchEnd.isAfter(subLatestStop)) {
             gaps.add(new Interval(subLatestStop, searchEnd));
         }
@@ -492,8 +697,7 @@ public class SubtracaoEntreHorarios {
     private boolean hasNoOverlap(List<Interval> existingIntervals, Interval searchInterval, DateTime searchStart, DateTime searchEnd) {
         DateTime earliestStart = existingIntervals.get(0).getStart();
         DateTime latestStop = existingIntervals.get(existingIntervals.size() - 1).getEnd();
-        // return the entire search interval if it does not overlap with
-        // existing at all
+        
         if (searchEnd.isBefore(earliestStart) || searchStart.isAfter(latestStop)) {
             return true;
         }

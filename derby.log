@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu May 26 12:45:35 CLT 2022:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0181-0142-5b7e-000003670200 
+Fri May 27 00:35:10 CLT 2022:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-0181-03cc-024b-00000366ccd8 
 on database directory C:\Users\Marcos\Documents\NetBeansProjects\testeInsightInformtica\ponto with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93 
 Loaded from file:/C:/Users/Marcos/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
 java.vendor=Oracle Corporation
