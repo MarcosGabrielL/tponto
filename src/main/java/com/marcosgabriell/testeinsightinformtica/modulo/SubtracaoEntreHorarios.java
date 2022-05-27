@@ -537,7 +537,9 @@ public class SubtracaoEntreHorarios {
                       
                     if( (searchInterval.contains(trabalhou.getEndMillis()) 
                             || searchInterval.getEndMillis() - trabalhou.getEndMillis() == 0)
-                            ||  searchInterval.contains(trabalhou.getStartMillis())){
+                            ||  searchInterval.contains(trabalhou.getStartMillis())
+                            || trabalhou.contains(searchInterval.getEndMillis())
+                            || trabalhou.contains(searchInterval.getStartMillis())){
                             
                         contains = true;
                       //Entrou antes e saiu antes
@@ -545,6 +547,7 @@ public class SubtracaoEntreHorarios {
                       //Entrou depois e saiu depois
                       //Entrou depois e saiu antes
                     }
+                    
                 
                  
              }

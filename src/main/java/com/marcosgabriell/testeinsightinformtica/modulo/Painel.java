@@ -357,16 +357,28 @@ public class Painel extends javax.swing.JFrame {
     
     public void preparaproximo(){
         
-        jFormattedTextField4.setText("");
-        jFormattedTextField3.setText("");
+        jFormattedTextField4.setValue(null);
+        jFormattedTextField3.setValue(null);
+        jFormattedTextField4.requestFocus();
+        jFormattedTextField3.requestFocus();
+        jFormattedTextField4.setValue(null);
+        jFormattedTextField3.setValue(null);
+        
+        jFormattedTextField4.requestFocus();
         
         readjTableHorarioDeTrabalho();
     }
     
     public void preparaproximoMarcacoes(){
         
-        jFormattedTextField2.setText("");
-        jFormattedTextField1.setText("");
+        jFormattedTextField2.setValue(null);
+        jFormattedTextField1.setValue(null);
+        jFormattedTextField2.requestFocus();
+        jFormattedTextField1.requestFocus();
+        jFormattedTextField2.setValue(null);
+        jFormattedTextField1.setValue(null);
+        
+        jFormattedTextField2.requestFocus();
         
         readjTableMarcacoesFeitas();
     }
