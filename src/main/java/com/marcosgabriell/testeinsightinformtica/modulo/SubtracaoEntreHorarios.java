@@ -86,6 +86,15 @@ public class SubtracaoEntreHorarios {
                         Final = c.getTime();
                       TurnoMadrugada = true;
                        
+                   }else{
+                       if(TurnoMadrugada){
+                       c.setTime(Inicio);
+                        c.add(Calendar.DAY_OF_YEAR, +1);
+                        Inicio = c.getTime();
+                        c.setTime(Final);
+                        c.add(Calendar.DAY_OF_YEAR, +1);
+                        Final = c.getTime();
+                       }
                    }
                  
                  Interval interval = new Interval(Inicio.getTime(), Final.getTime());
@@ -208,7 +217,7 @@ public class SubtracaoEntreHorarios {
                                 
                  
                  //Entrou depois do inicio do intervalo e saiu antes do fim do intervalo
-                  if (trabalhou.getStart().isAfter(searchInterval.getStart()) && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
+                  if (trabalhou.getStart().isAfter(searchInterval.getStart())  && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
                       try{
                       Interval intervalo = new Interval(trabalhou.getStart(), trabalhou.getEnd());
                        System.out.println("EXTRA 1: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
@@ -306,6 +315,25 @@ public class SubtracaoEntreHorarios {
                         trabalhou.getEnd().isBefore(searchInterval.getEnd()) ){
                        try{
                       Interval intervalo = new Interval(searchInterval.getStart(), trabalhou.getEnd());
+                       System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       HoraExtra extra = new HoraExtra();
+                        extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        extra.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        extra.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        extras.add(extra);
+                      }catch( java.lang.IllegalArgumentException e){}
+                    }
+                    
+                    //Entrou justo no intervalo e saiu depois
+                    if ( searchInterval.getStart().toInstant().toDate().getTime() - trabalhou.getStart().toInstant().toDate().getTime() ==0 &&
+                        trabalhou.getEnd().isAfter(searchInterval.getEnd()) ){
+                       try{
+                      Interval intervalo = new Interval(searchInterval.getStart(), searchInterval.getEnd());
                        System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
                                                           + formatador1.format(intervalo.getEnd().getMillis()));
                        HoraExtra extra = new HoraExtra();

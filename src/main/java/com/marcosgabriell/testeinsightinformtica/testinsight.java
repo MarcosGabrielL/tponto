@@ -47,11 +47,11 @@ public class testinsight {
         
             MarcacoesFeitas m = new MarcacoesFeitas();
             MarcacoesFeitasDao mdao = new MarcacoesFeitasDao();
-            m.setEntrada("22:00");
-            m.setSaida("01:00");
+            m.setEntrada("21:00");
+            m.setSaida("00:00");
             mdao.creat(m);
-            m.setEntrada("02:00");
-            m.setSaida("06:00");
+            m.setEntrada("01:00");
+            m.setSaida("05:00");
             mdao.creat(m);
             //m.setEntrada("19:00");
             //m.setSaida("21:00");
