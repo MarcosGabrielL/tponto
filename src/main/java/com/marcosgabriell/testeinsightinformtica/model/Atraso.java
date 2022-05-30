@@ -4,6 +4,8 @@
  */
 package com.marcosgabriell.testeinsightinformtica.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author Marcos
@@ -47,5 +49,33 @@ public class Atraso {
     public Atraso() {
         super();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.entrada);
+        hash = 29 * hash + Objects.hashCode(this.saida);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Atraso other = (Atraso) obj;
+        if (!Objects.equals(this.entrada, other.entrada)) {
+            return false;
+        }
+        return Objects.equals(this.saida, other.saida);
+    }
+    
+    
     
 }
