@@ -214,12 +214,12 @@ public class SubtracaoEntreHorarios {
              
              for(Interval trabalhou : Trabalhos){
                  
-                 /*  System.out.println("InicioIntervalo: "+ formatador1.format(searchInterval.getStart().getMillis())
-                                  +"\tFinalIntervalo"+formatador1.format(searchInterval.getEnd().getMillis()));
-                   System.out.println("EntradaNoTrabalho: "+ formatador1.format(trabalhou.getStart().getMillis())
-                                   +"\tSaidaNoTrabalho"+formatador1.format(trabalhou.getEnd().getMillis())+"\n\n");
+                  System.out.println("InicioIntervalo: "+ formatador2.format(searchInterval.getStart().getMillis())
+                                  +"\tFinalIntervalo"+formatador2.format(searchInterval.getEnd().getMillis()));
+                   System.out.println("EntradaNoTrabalho: "+ formatador2.format(trabalhou.getStart().getMillis())
+                                   +"\tSaidaNoTrabalho"+formatador2.format(trabalhou.getEnd().getMillis())+"\n\n");
                    
-                      */          
+                               
                  
                  //Entrou depois do inicio do intervalo e saiu antes do fim do intervalo
                   if (trabalhou.getStart().isAfter(searchInterval.getStart())  && trabalhou.getEnd().isBefore(searchInterval.getEnd())) {
@@ -339,7 +339,7 @@ public class SubtracaoEntreHorarios {
                         trabalhou.getEnd().isAfter(searchInterval.getEnd()) ){
                        try{
                       Interval intervalo = new Interval(searchInterval.getStart(), searchInterval.getEnd());
-                       System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                       System.out.println("EXTRA 4.1: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
                                                           + formatador1.format(intervalo.getEnd().getMillis()));
                        HoraExtra extra = new HoraExtra();
                         extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
@@ -358,7 +358,7 @@ public class SubtracaoEntreHorarios {
                         searchInterval.getEnd().toInstant().toDate().getTime() - trabalhou.getEnd().toInstant().toDate().getTime() ==0 ){
                        try{
                       Interval intervalo = new Interval(searchInterval.getStart(), searchInterval.getEnd());
-                       System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                       System.out.println("EXTRA 4.2: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
                                                           + formatador1.format(intervalo.getEnd().getMillis()));
                        HoraExtra extra = new HoraExtra();
                         extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
@@ -377,7 +377,27 @@ public class SubtracaoEntreHorarios {
                    if (trabalhou.getStart().isBefore(searchInterval.getStart()) && trabalhou.getEnd().isAfter(searchInterval.getEnd())) {
                       try{
                       Interval intervalo = new Interval(searchInterval.getStart(), searchInterval.getEnd());
-                       System.out.println("EXTRA 4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                       System.out.println("EXTRA 4.3: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
+                                                          + formatador1.format(intervalo.getEnd().getMillis()));
+                       HoraExtra extra = new HoraExtra();
+                        extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
+                        extra.setSaida(formatador1.format(intervalo.getEnd().getMillis()));
+                        extra.setQuantidade(Math.toIntExact(
+                                TimeUnit.MILLISECONDS.toMinutes( intervalo.getStart().toInstant().toDate().getTime() 
+                                                                                    - intervalo.getEnd().toInstant().toDate().getTime()
+                                                                )
+                                                            ));
+                        extras.add(extra);
+                      }catch( java.lang.IllegalArgumentException e){}
+                    }
+                   
+                   //Entrou antes do inicio do intervalo e saiu justo no intervalo
+                   if (trabalhou.getStart().isBefore(searchInterval.getStart()) 
+                  &&  searchInterval.getEnd().toInstant().toDate().getTime() - trabalhou.getEnd().toInstant().toDate().getTime() ==0 ){
+                       
+                      try{
+                      Interval intervalo = new Interval(searchInterval.getStart(), searchInterval.getEnd());
+                       System.out.println("EXTRA 4.4: "  + formatador1.format(intervalo.getStart().getMillis()) +" "
                                                           + formatador1.format(intervalo.getEnd().getMillis()));
                        HoraExtra extra = new HoraExtra();
                         extra.setEntrada(formatador1.format(intervalo.getStart().getMillis()));
@@ -627,83 +647,9 @@ public class SubtracaoEntreHorarios {
        }
        
        ResultSubtracao result = new ResultSubtracao();
-       /*List<Interval> ar = new ArrayList<>();
-       List<Atraso> newatrasos = new ArrayList<>();
-         List<HoraExtra> newextras = new ArrayList<>();
-       for(Atraso a :atrasos){
-            try{
-           Interval interval = new Interval(formatador1.parse(a.getEntrada()).getTime(), formatador1.parse(a.getSaida()).getTime());
-            
-           ar.add(interval);
-            }catch( java.lang.IllegalArgumentException e){}
-            
-           
-       }
-        Collections.sort(ar, new IntervalStartComparator());
-       if(ar.size()>1){
-       Interval interval = new Interval(ar.get(0).getStart(), ar.get(ar.size()-1).getEnd());
-       //Interval interval = new Interval(formatador1.parse("08:01").getTime(), formatador1.parse("11:59").getTime());
-            
-            System.out.println("Interval: "+interval );
-            System.out.println("Todos atrasos: "+ar );
-            
-       List<Interval> arinterno = new ArrayList<>();
-       ar = findOverlappingIntervalApproach1(ar);
-       for(Interval atraso : ar){
-           
-            for(Interval atraso1 : ar){
-                    
-                        if(( (atraso.getStart().isAfter(atraso1.getStart()) 
-                    || atraso.getStart().toInstant().toDate().getTime() - 
-                          atraso1.getStart().toInstant().toDate().getTime() ==0 )  &&
-                                atraso1.getEnd().isBefore(atraso.getEnd()) )){
-                              
-                              //check
-                              boolean tem=false;
-                             for(Interval searchInterval: Trabalhos){
-                               
-                             }
-                              if(!tem){
-                                   try{
-                            Interval a = new Interval(atraso.getStart(), atraso1.getEnd());
-                            arinterno.add(a);
-                             }catch( java.lang.IllegalArgumentException e){}
-                              }     
-                             
-                              
-                                    
-                        }
-           
-                 }
-           
-       }
        
-       
-      
-      // }
-       
-         for(Interval atraso: arinterno){
-             Atraso NewAtraso = new Atraso();
-             NewAtraso.setEntrada(formatador1.format(atraso.getStart().getMillis()));
-             NewAtraso.setSaida(formatador1.format(atraso.getEnd().getMillis()));
-             NewAtraso.setQuantidade(Math.toIntExact(
-                                TimeUnit.MILLISECONDS.toMinutes( atraso.getStart().toInstant().toDate().getTime() 
-                                                                                    - atraso.getEnd().toInstant().toDate().getTime()
-                                                                )
-                                                            ));
-             newatrasos.add(NewAtraso);
-         }
-         if(newatrasos.size()>=1){
-             atrasos = newatrasos;
-         }
-       }else{
-           
-       }
-       
-       */
        
        //RETIRA ATRASOS DUPLICADOS
-       //atrasos = removeDuplicates( atrasos);
        Set<Atraso> set = new HashSet<>(atrasos);
         atrasos.clear();
         atrasos.addAll(set);
