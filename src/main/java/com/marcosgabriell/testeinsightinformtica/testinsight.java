@@ -32,30 +32,7 @@ public class testinsight {
             Connector.getConnection();
              Connector.creatdatabase();
              
-               HorarioDeTrabalho p = new HorarioDeTrabalho();
-            HorarioDeTrabalhoDao dao = new HorarioDeTrabalhoDao();
-            p.setEntrada("22:00");
-            p.setSaida("01:00");
-            dao.creat(p);
-            p.setEntrada("02:00");
-            p.setSaida("06:00");
-            dao.creat(p);
-            //p.setEntrada("19:00");
-            //p.setSaida("21:00");
-            //dao.creat(p);
-        
-        
-            MarcacoesFeitas m = new MarcacoesFeitas();
-            MarcacoesFeitasDao mdao = new MarcacoesFeitasDao();
-            m.setEntrada("23:00");
-            m.setSaida("02:00");
-            mdao.creat(m);
-            m.setEntrada("03:00");
-            m.setSaida("07:00");
-            mdao.creat(m);
-            //m.setEntrada("19:00");
-            //m.setSaida("21:00");
-            //mdao.creat(m);
+          
                 
          new Painel().setVisible(true);
         
